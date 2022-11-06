@@ -44,6 +44,7 @@ int SalidadePilas(Pila pila[], int o, int d);
 int identificarCarta(Pila pila[], int o, int d, int c);
 int OrdenCartas(Pila pila[], int* contador);
 int tam_Pila(Pila pila[], int i);
+void Desbordar(Pila pila[], int i);
 
 
 void reglas() {
@@ -256,4 +257,21 @@ void menu1(Pila pila[]) {
 			break;
 		}
 	}
+}
+void Apilar(Pila pila[], int i, Carta x) {
+	pilas[13].fin = MAX;
+	if (pila[i].inicio == pila[i + 1].fin)
+		Desbordar(pila, i);
+
+	pila[i].inicio = pila[i].inicio + 1;
+	V[pila[i].inicio] = x;
+}
+Carta Desapilar(Pila pila[], int i, Carta x) {
+	if (pila[i].inicio == pila[i].fin)
+		x.numCarta = 0; //Si la pila esta vacia, retorna 0.
+	else {
+		x = V[pila[i].inicio];
+		pila[i].inicio = pila[i].inicio - 1;
+	}
+	return x;
 }
