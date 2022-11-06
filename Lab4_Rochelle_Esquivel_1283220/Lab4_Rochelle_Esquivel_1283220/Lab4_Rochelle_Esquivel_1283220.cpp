@@ -30,14 +30,17 @@ Pila pilas[13];
 //Creacion de métodos
 void menu1(Pila pila[]);
 void menuJuego(Pila pila[]);
-void reglas(void);
-void comandos(void);
+void reglas();
+void comandos();
 void imprimir_Pila(Pila pila[], int i);
 void MostrarPilas(Pila pila[]);
 void ApilarCartas(Pila pila[], int o, int d, int c);
 void Apilar(Pila pila[], int i, Carta x);
 void IntercambiarPos(Pila pila[], int a, int b);
 void crearTopes(Pila pila[]);
+void Desbordar(Pila pila[], int i);
+void Intercambiar(Carta cartas[], int i, int j);
+void barajar(Carta aux[]);
 Carta Desapilar(Pila pila[], int i, Carta x);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
@@ -45,7 +48,7 @@ int SalidadePilas(Pila pila[], int o, int d);
 int identificarCarta(Pila pila[], int o, int d, int c);
 int OrdenCartas(Pila pila[], int* contador);
 int tam_Pila(Pila pila[], int i);
-void Desbordar(Pila pila[], int i);
+
 
 
 void reglas() {
@@ -338,4 +341,31 @@ void imprimir_Pila(Pila pila[], int i) {
 		mostrarCarta(pila, j);
 	}
 	cout << "\n";
+}
+void Intercambiar(Carta cartas[], int i, int j) {
+	Carta aux;
+	aux = cartas[i];
+	cartas[i] = cartas[j];
+	cartas[j] = aux;
+}
+void IntercambiarPos(Pila pila[], int a, int b) {
+	Carta aux;
+	aux = V[a];
+	V[a] = V[b];
+	V[b] = aux;
+}
+void barajar(Carta aux[]) {
+	int i = 52;
+	while (i >= 0) {
+		srand(time(NULL));
+		if (i == 0) {
+			int randomPosition = rand() % 52 + 1;
+			Intercambiar(aux, randomPosition, i);
+		}
+		else {
+			int randomPosition = rand() % i + 1;
+			Intercambiar(aux, randomPosition, i);
+		}
+		i--;
+	}
 }
