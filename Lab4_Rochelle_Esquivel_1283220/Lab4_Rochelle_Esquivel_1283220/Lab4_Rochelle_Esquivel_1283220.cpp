@@ -36,11 +36,14 @@ void imprimir_Pila(Pila pila[], int i);
 void MostrarPilas(Pila pila[]);
 void ApilarCartas(Pila pila[], int o, int d, int c);
 void Apilar(Pila pila[], int i, Carta x);
+void IntercambiarPos(Pila pila[], int a, int b);
 Carta Desapilar(Pila pila[], int i, Carta x);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
 int SalidadePilas(Pila pila[], int o, int d);
 int identificarCarta(Pila pila[], int o, int d, int c);
+int OrdenCartas(Pila pila[], int* contador);
+int tam_Pila(Pila pila[], int i);
 
 
 void reglas() {
@@ -148,4 +151,78 @@ void ApilarCartas(Pila pila[], int o, int d, int c) {
 		if (pilaVacia(pila, o) == 0)
 			V[pila[o].inicio].estado = 1;
 	}
+}
+int OrdenCartas(Pila pila[], int* contador) {
+	int o, d, c;
+	char opc;
+	Carta aux;
+
+	if (scanf("%d %d", &o, &d) == 2) {
+
+		if (d < 7) {
+
+			if (pilaVacia(pila, d)) {
+				if (V[pila[o].inicio].numCarta == 13) {
+					aux = Desapilar(pila, o, aux);
+					Apilar(pila, d, aux);
+					if (o != 0)
+						V[pila[o].inicio].estado = 1;
+					V[pila[d].inicio].estado = 1;
+				}
+			}
+			if (ValidarPilas(pila, o, d) == 1) {
+
+				aux = Desapilar(pila, o, aux);
+				Apilar(pila, d, aux);
+				V[pila[o].inicio].estado = 1;
+				V[pila[d].inicio].estado = 1;
+			}
+		}
+		else {
+			if (SalidadePilas(pila, o, d) == 1) {
+				aux = Desapilar(pila, o, aux);
+				Apilar(pila, d, aux);
+				V[pila[o].inicio].estado = 1;
+				V[pila[d].inicio].estado = 1;
+			}
+		}
+
+	}
+	else if (scanf("%c", &opc) == 1) {
+		if (opc == 'w' || opc == 'W') {
+			return 1;
+		}
+		if (opc == 'd' || opc == 'D') {
+			//Si la pila de reserva no esta vacia
+			if (tam_Pila(pila, 1) != 0) {
+				//Si la pila 0 esta vacia, hacer pop a pila 1 y luego push a pila 0.
+				if (pilaVacia(pila, 0) == 1) {
+					aux = Desapilar(pila, 1, aux);
+					Apilar(pila, 0, aux);
+					V[pila[0].inicio].estado = 1;
+				}
+				//Si la pila 0 no esta vacia, intercabiar pila 1 con pila 0.
+				else {
+					(*contador)++;
+					IntercambiarPos(pila, pila[0].inicio, pila[1].inicio -
+						(*contador % (tam_Pila(pila, 1) - 1)));
+					V[pila[0].inicio].estado = 1;
+				}
+			}
+		}
+		if (opc == 'c') {
+			scanf("%d %d %d", &o, &d, &c);
+			ApilarCartas(pila, o, d, c);
+		}
+		if (opc == 'n') {
+			system("clear");
+			menu1(pila);
+		}
+		return 0;
+
+	}
+	if (pila) {
+		return 0;
+	}
+		
 }
