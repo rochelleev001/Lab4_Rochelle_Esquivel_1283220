@@ -226,3 +226,34 @@ int OrdenCartas(Pila pila[], int* contador) {
 	}
 		
 }
+void menu1(Pila pila[]) {
+	int opc = 1;
+	int value;
+	while (opc) {
+		cout << "\t\tBienvenido al juego El solitario\n\n" << endl;
+		cout << "1. Reglas del juego\n" << endl;
+		cout << "2. Comandos del juego\n" << endl;
+		cout << "3. Empezar a jugar\n" << endl;
+		cout << "4. Salir\n" << endl;
+
+		cout << "Ingrese Opcion\n" << endl;
+		scanf("%d", &opc);
+
+		switch (opc) {
+
+		case 1:	reglas();
+			break;
+
+		case 2:	comandos();
+			break;
+		case 3: menuJuego(pila);
+			break;
+
+		case 4:	opc = 0;
+			break;
+
+		default: cout << "Ingrese opcion valida\n" << endl;
+			break;
+		}
+	}
+}
