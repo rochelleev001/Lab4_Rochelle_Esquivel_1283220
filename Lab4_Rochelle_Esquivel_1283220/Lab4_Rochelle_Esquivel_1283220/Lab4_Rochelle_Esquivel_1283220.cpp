@@ -34,10 +34,14 @@ void reglas(void);
 void comandos(void);
 void imprimir_Pila(Pila pila[], int i);
 void MostrarPilas(Pila pila[]);
+void ApilarCartas(Pila pila[], int o, int d, int c);
+void Apilar(Pila pila[], int i, Carta x);
+Carta Desapilar(Pila pila[], int i, Carta x);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
 int SalidadePilas(Pila pila[], int o, int d);
 int identificarCarta(Pila pila[], int o, int d, int c);
+
 
 void reglas() {
 	cout << "		 JUEGO EL SOLITARIO        " << endl;
@@ -128,4 +132,20 @@ int identificarCarta(Pila pila[], int o, int d, int c) { // buscar carta e ident
 			return indice;
 	}
 	return -1;
+}
+void ApilarCartas(Pila pila[], int o, int d, int c) {
+	Carta temp;
+	int indice = identificarCarta(pila, o, d, c);
+	if (indice != -1) {
+		int count = 0;
+		count = pila[o].inicio - indice;
+		Carta cart[count + 1];
+		for (int i = 0; i < count + 1; i++)
+			cart[i] = Desapilar(pila, o, temp);
+		for (int i = 0; i < count + 1; i++)
+			Apilar(pila, d, cart[count - i]);
+
+		if (pilaVacia(pila, o) == 0)
+			V[pila[o].inicio].estado = 1;
+	}
 }
