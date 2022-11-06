@@ -37,6 +37,7 @@ void MostrarPilas(Pila pila[]);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
 int SalidadePilas(Pila pila[], int o, int d);
+int identificarCarta(Pila pila[], int o, int d, int c);
 
 void reglas() {
 	cout << "		 JUEGO EL SOLITARIO        " << endl;
@@ -113,4 +114,18 @@ int SalidadePilas(Pila pila[], int o, int d) {
 	}	
 	return 1;
 }
+int identificarCarta(Pila pila[], int o, int d, int c) { // buscar carta e identificar pila
+	int indice = -1;
+	for (int i = pila[o].inicio; i >= pila[o].fin + 1; i--) {
+		if (V[i].estado == 0) break;
+		if (V[i].numCarta == c) indice = i;
+	}
+	if (indice != -1) {
+		if (pilaVacia(pila, d)) return indice;
 
+		if (V[indice].numCarta == (V[pila[d].inicio].numCarta - 1)
+			&& V[indice].color != V[pila[d].inicio].color)
+			return indice;
+	}
+	return -1;
+}
