@@ -37,6 +37,7 @@ void MostrarPilas(Pila pila[]);
 void ApilarCartas(Pila pila[], int o, int d, int c);
 void Apilar(Pila pila[], int i, Carta x);
 void IntercambiarPos(Pila pila[], int a, int b);
+void crearTopes(Pila pila[]);
 Carta Desapilar(Pila pila[], int i, Carta x);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
@@ -274,4 +275,50 @@ Carta Desapilar(Pila pila[], int i, Carta x) {
 		pila[i].inicio = pila[i].inicio - 1;
 	}
 	return x;
+}
+
+// actualizar topes y bases en la pila
+void crearTopes(Pila pila[]) { 
+	for (int i = 0; i <= 12; i++) 
+		pila[i].fin = pila[i].inicio = (int)(i * ((float)(MAX) / 13)); 
+}
+void Desbordar(Pila pila[], int i) {
+	int j = i;
+
+	int flat = 0;
+	while (pila[j].inicio < MAX) {
+		j++;
+		if (pila[j].inicio < pila[j + 1].fin) {
+			flat = 1; 
+			break;
+		}
+	}
+
+	if (flat == 1) {
+
+		for (int k = pila[j].inicio; k >= pila[i + 1].fin + 1; k--) 
+			V[k + 1] = V[k];
+
+		for (int k = i + 1; k <= j; k++) {
+			pila[k].fin = pila[k].fin + 1;
+			pila[k].inicio = pila[k].inicio + 1;
+		}
+	}
+
+	else {
+		j = i;
+		while (1) {
+			j--;
+			if (pila[j].inicio < pila[j + 1].fin) {
+				break;
+			}
+		}
+		for (int k = pila[j + 1].fin; k < pila[i].inicio; k++)
+			V[k] = V[k + 1];
+
+		for (int k = j + 1; k <= i; k++) {
+			pila[k].fin = pila[k].fin - 1;
+			pila[k].inicio = pila[k].inicio - 1;
+		}
+	}
 }
