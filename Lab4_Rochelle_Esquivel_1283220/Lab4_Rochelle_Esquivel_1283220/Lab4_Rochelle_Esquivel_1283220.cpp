@@ -14,7 +14,7 @@ int main()
 typedef struct {
 	int color;
 	int estado;
-	int numeroCarta;
+	int numCarta;
 } Carta;
 
 Carta V[MAX];
@@ -34,6 +34,8 @@ void reglas(void);
 void comandos(void);
 void imprimir_Pila(Pila pila[], int i);
 void MostrarPilas(Pila pila[]);
+int ValidarPilas(Pila pila[], int o, int d);
+int pilaVacia(Pila pila[], int i);
 
 void reglas() {
 	cout << "		 JUEGO EL SOLITARIO        " << endl;
@@ -69,6 +71,26 @@ void MostrarPilas(Pila pila[]) {
 	cout << "G5:"; imprimir_Pila(pila, 5);
 	cout << "G6:"; imprimir_Pila(pila, 6);
 	cout << "G7:"; imprimir_Pila(pila, 7);
+}
+//validez de pilas y verificar que no estén vacías
+int ValidarPilas(Pila pila[], int o, int d) {
+	if (d < 2 || o == 1 || o < 0 || o > 7) //7 pilas 
+		return 0;
+
+	if (pilaVacia(pila, o))
+		return 0;
+
+	if (pilaVacia(pila, d))
+		if (V[pila[o].top].numCarta != 13) //cantidad de cartas
+			return 0;
+
+	if (pilaVacia(pila, d) == 0) {
+		if (V[pila[o].top].color == V[pila[d].top].color)
+			return 0;
+		if (V[pila[o].top].numCarta != (V[pila[d].top].numCarta - 1))
+			return 0;
+	}
+	return 1;
 }
 
 
