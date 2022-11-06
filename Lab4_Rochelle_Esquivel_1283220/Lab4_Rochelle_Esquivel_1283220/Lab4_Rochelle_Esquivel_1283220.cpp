@@ -322,3 +322,20 @@ void Desbordar(Pila pila[], int i) {
 		}
 	}
 }
+void mostrarCarta(Pila pila[], int j) {
+	if (V[j].estado == 1) {
+		cout << "[%d%c]", V[j].numCarta, V[j].color;
+	}
+		
+	else {
+		cout << "[%c%c]", '*', '*';
+	}
+		
+}
+
+void imprimir_Pila(Pila pila[], int i) {
+	for (int j = pila[i].fin + 1; j <= pila[i].inicio; j++) {
+		mostrarCarta(pila, j);
+	}
+	cout << "\n";
+}
