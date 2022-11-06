@@ -369,3 +369,48 @@ void barajar(Carta aux[]) {
 		i--;
 	}
 }
+void crearCartas(Carta cartas[]) {
+	int a, b, c;
+	a = b = c = 1;
+	for (int i = 0; i < 52; i++) {
+		if (i <= 12) {
+			cartas[i].color = 1; 
+			cartas[i].numCarta = i + 1;
+		}
+		if (i > 12 && i <= 25) {
+			cartas[i].color = 1; 
+			cartas[i].numCarta = a++;
+		}
+		if (i > 25 && i <= 38) {
+			cartas[i].color = 0; 
+			cartas[i].numCarta = b++;
+		}
+		if (i > 38) {
+			cartas[i].color = 0; 
+			cartas[i].numCarta = c++;
+		}
+
+	}
+}
+void repartirPilas(Pila pila[]) {
+	crearTopes(pila);
+	Carta cartas[52];
+	crearCartas(cartas);
+	barajar(cartas);
+
+	for (int k = 0; k < 24; k++) {
+		Apilar(pila, 1, cartas[k]);
+		V[pila[1].fin + k + 1].estado = 0;
+	}
+
+	int aux = 24;
+	for (int i = 2; i <= 7; i++) {
+		for (int j = 0; j < i - 1; j++) {
+			Apilar(pila, i, cartas[aux]);
+			V[pila[i].fin + j + 1].estado = 0;
+			aux++;
+		}
+		V[pila[i].inicio].estado = 1;
+	}
+
+}
