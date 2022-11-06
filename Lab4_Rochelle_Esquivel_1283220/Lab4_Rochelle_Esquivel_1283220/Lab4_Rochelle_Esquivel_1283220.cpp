@@ -22,8 +22,8 @@ Carta V[MAX];
 //pilas
 typedef struct {
 	Carta c;
-	int base; 
-	int top;
+	int fin; 
+	int inicio;
 }Pila;
 Pila pilas[13];
 
@@ -36,6 +36,7 @@ void imprimir_Pila(Pila pila[], int i);
 void MostrarPilas(Pila pila[]);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
+int SalidadePilas(Pila pila[], int o, int d);
 
 void reglas() {
 	cout << "		 JUEGO EL SOLITARIO        " << endl;
@@ -74,23 +75,42 @@ void MostrarPilas(Pila pila[]) {
 }
 //validez de pilas y verificar que no estén vacías
 int ValidarPilas(Pila pila[], int o, int d) {
-	if (d < 2 || o == 1 || o < 0 || o > 7) //7 pilas 
+	if (d < 2 || o == 1 || o < 0 || o > 7) {
 		return 0;
-
-	if (pilaVacia(pila, o))
+	} //7 pilas 
+	if (pilaVacia(pila, o)) {
 		return 0;
-
-	if (pilaVacia(pila, d))
-		if (V[pila[o].top].numCarta != 13) //cantidad de cartas
+	}
+		
+	if (pilaVacia(pila, d)) {
+		if (V[pila[o].inicio].numCarta != 13) {
 			return 0;
+		} //cantidad de cartas
+			
+	}
+		
 
 	if (pilaVacia(pila, d) == 0) {
-		if (V[pila[o].top].color == V[pila[d].top].color)
+		if (V[pila[o].inicio].color == V[pila[d].inicio].color) {
 			return 0;
-		if (V[pila[o].top].numCarta != (V[pila[d].top].numCarta - 1))
+		}
+		if (V[pila[o].inicio].numCarta != (V[pila[d].inicio].numCarta - 1)) {
 			return 0;
+		}
+			
 	}
 	return 1;
 }
-
+int SalidadePilas(Pila pila[], int o, int d) {
+	if (d > 13) {
+		return 0;
+	}
+		
+	if (pilaVacia(pila, d) == 0) {
+		if (V[pila[o].inicio].numCarta != (V[pila[d].inicio].numCarta + 1)) {
+			return 0;
+		}	
+	}	
+	return 1;
+}
 
