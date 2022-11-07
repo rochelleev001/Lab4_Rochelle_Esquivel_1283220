@@ -30,7 +30,7 @@ Pila pilas[13];
 
 //Creacion de métodos
 void menu1(Pila pila[]);
-void menuJuego(Pila pila[]);
+void menu2(Pila pila[]);
 void reglas();
 void comandos();
 void imprimir_Pila(Pila pila[], int i);
@@ -162,8 +162,9 @@ void ApilarCartas(Pila pila[], int o, int d, int c) { //apilar cartas a pilas
 	Carta temp;
 	int indice = identificarCarta(pila, o, d, c);
 	if (indice != -1) {
-		int count = pila[o].inicio - indice;
-		Carta cart[count + 1];
+		int count = 0;
+		count = pila[o].inicio - indice;
+		Carta cart[count + 1]; // no se como corregir para que me deje ingresar a array
 		for (int i = 0; i < count + 1; i++) {
 			cart[i] = Desapilar(pila, o, temp);
 		}
@@ -272,7 +273,7 @@ void menu1(Pila pila[]) {
 
 		case 2:	comandos();
 			break;
-		case 3: menuJuego(pila);
+		case 3: menu2(pila);
 			break;
 
 		case 4:	opc = 0;
@@ -346,6 +347,7 @@ void Desbordar(Pila pila[], int i) {
 		}
 	}
 }
+// mostrar carta con num y color
 void mostrarCarta(Pila pila[], int j) {
 	if (V[j].estado == 1) {
 		cout << "[%d%c]", V[j].numCarta, V[j].color;
@@ -375,6 +377,8 @@ void IntercambiarPos(Pila pila[], int a, int b) {
 	V[a] = V[b];
 	V[b] = aux;
 }
+
+//random aplicado a baraja
 void barajar(Carta aux[]) {
 	int i = 52;
 	while (i >= 0) {
@@ -390,12 +394,13 @@ void barajar(Carta aux[]) {
 		i--;
 	}
 }
+//creacion cartas tab
 void crearCartas(Carta cartas[]) {
 	int a, b, c;
 	a = b = c = 1;
 	for (int i = 0; i < 52; i++) {
 		if (i <= 12) {
-			cartas[i].color = 1; 
+			cartas[i].color = 1; //rojo
 			cartas[i].numCarta = i + 1;
 		}
 		if (i > 12 && i <= 25) {
@@ -403,10 +408,10 @@ void crearCartas(Carta cartas[]) {
 			cartas[i].numCarta = a++;
 		}
 		if (i > 25 && i <= 38) {
-			cartas[i].color = 0; 
+			cartas[i].color = 0; //negro
 			cartas[i].numCarta = b++;
 		}
-		if (i > 38) {
+		if (i > 38 && i < 52) {
 			cartas[i].color = 0; 
 			cartas[i].numCarta = c++;
 		}
@@ -420,12 +425,12 @@ void repartir(Pila pila[]) {
 	crearCartas(cartas);
 	barajar(cartas);
 
-	for (int k = 0; k < 24; k++) {
+	for (int k = 0; k < 13; k++) {
 		Apilar(pila, 1, cartas[k]);
 		V[pila[1].fin + k + 1].estado = 0;
 	}
 
-	int aux = 24;
+	int aux = 13;
 	for (int i = 2; i <= 7; i++) {
 		for (int j = 0; j < i - 1; j++) {
 			Apilar(pila, i, cartas[aux]);
@@ -451,13 +456,13 @@ int pilaVacia(Pila pila[], int i) {
 //determinar si ganó
 int ganador(Pila pila[]) {
 	int k = 0;
-	int i = 9;
-	for (int j = 0; j < 4; j++)
+	int i = 7;
+	for (int j = 0; j < 7; j++)
 		if (pilaLLena(pila, i + j)) k++;
 
-	return k == 4 ? 1 : 0;
+	return k == 7 ? 1 : 0;
 }
-void menuJuego(Pila pila[]) {
+void menu2(Pila pila[]) {
 	repartir(pila);
 	MostrarPilas(pila);
 	int contador = -1;
@@ -467,6 +472,6 @@ void menuJuego(Pila pila[]) {
 		flag = OrdenCartas(pila, &contador);
 		MostrarPilas(pila);
 	}
-	cout << "¡GANASTE EL JUEGO!\n" << endl;
+	cout << "¡GANADOR!\n" << endl;
 
 }
