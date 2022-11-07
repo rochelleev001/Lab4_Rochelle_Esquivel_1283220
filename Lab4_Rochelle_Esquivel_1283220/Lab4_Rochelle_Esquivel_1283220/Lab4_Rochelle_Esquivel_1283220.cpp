@@ -5,6 +5,7 @@
 #define MAX 52
 using namespace std;
 
+//con ayuda de https://github.com/gusseppe/JuegoSolitario/blob/master/solitario.c
 int main()
 {
 	menu1(pilas);
@@ -41,13 +42,19 @@ void crearTopes(Pila pila[]);
 void Desbordar(Pila pila[], int i);
 void Intercambiar(Carta cartas[], int i, int j);
 void barajar(Carta aux[]);
+void repartir(Pila pila[]);
+void crearCartas(Carta cartas[]);
+
 Carta Desapilar(Pila pila[], int i, Carta x);
 int ValidarPilas(Pila pila[], int o, int d);
 int pilaVacia(Pila pila[], int i);
 int SalidadePilas(Pila pila[], int o, int d);
 int identificarCarta(Pila pila[], int o, int d, int c);
 int OrdenCartas(Pila pila[], int* contador);
+int pilaLLena(Pila pila[], int i);
+int pilaVacia(Pila pila[], int i);
 int tam_Pila(Pila pila[], int i);
+int ganador(Pila pila[]);
 
 
 
@@ -57,8 +64,11 @@ void reglas() {
 	cout << "Reglas del juego: \n" << endl;
 	cout << "Hay 7 pilas de juego en donde se colocarán cartas\n" << endl;
 	cout << "de forma decreciente consecutiva y de colores alternantes.\n" << endl;
-	cout << "Si se logra llenar cada una de las 13 cartas de un mismo palo en cada pila de salida\n" << endl;
+	cout << "Si se logra llenar cada una de las 13 cartas en cada pila de salida\n" << endl;
 	cout << "se gana el juego, y se pierde cuando no se puede hacer ningun movimiento.\n" << endl;
+	cout <<"r, para barajar la carta descarte y poner otra carta\n";
+	cout << "c, para mover mas de una carta\n";
+	cout << "n, empezar un nuevo juego\n";
 }
 void comandos() {
 	cout << "*********************\n" << endl;
@@ -129,32 +139,42 @@ int SalidadePilas(Pila pila[], int o, int d) {
 int identificarCarta(Pila pila[], int o, int d, int c) { // buscar carta e identificar pila
 	int indice = -1;
 	for (int i = pila[o].inicio; i >= pila[o].fin + 1; i--) {
-		if (V[i].estado == 0) break;
-		if (V[i].numCarta == c) indice = i;
+		if (V[i].estado == 0) {
+			break;
+		}
+		if (V[i].numCarta == c) {
+			indice = i;
+		}
+			
 	}
 	if (indice != -1) {
-		if (pilaVacia(pila, d)) return indice;
-
-		if (V[indice].numCarta == (V[pila[d].inicio].numCarta - 1)
-			&& V[indice].color != V[pila[d].inicio].color)
+		if (pilaVacia(pila, d)) {
 			return indice;
+		}
+		if (V[indice].numCarta == (V[pila[d].inicio].numCarta - 1)
+			&& V[indice].color != V[pila[d].inicio].color) {
+			return indice;
+		}
 	}
 	return -1;
 }
-void ApilarCartas(Pila pila[], int o, int d, int c) {
+void ApilarCartas(Pila pila[], int o, int d, int c) { //apilar cartas a pilas
 	Carta temp;
 	int indice = identificarCarta(pila, o, d, c);
 	if (indice != -1) {
-		int count = 0;
-		count = pila[o].inicio - indice;
+		int count = pila[o].inicio - indice;
 		Carta cart[count + 1];
-		for (int i = 0; i < count + 1; i++)
+		for (int i = 0; i < count + 1; i++) {
 			cart[i] = Desapilar(pila, o, temp);
-		for (int i = 0; i < count + 1; i++)
+		}
+		for (int i = 0; i < count + 1; i++) {
 			Apilar(pila, d, cart[count - i]);
-
+		}
 		if (pilaVacia(pila, o) == 0)
+		{
 			V[pila[o].inicio].estado = 1;
+		}
+			
 	}
 }
 int OrdenCartas(Pila pila[], int* contador) {
@@ -170,9 +190,10 @@ int OrdenCartas(Pila pila[], int* contador) {
 				if (V[pila[o].inicio].numCarta == 13) {
 					aux = Desapilar(pila, o, aux);
 					Apilar(pila, d, aux);
-					if (o != 0)
+					if (o != 0) {
 						V[pila[o].inicio].estado = 1;
-					V[pila[d].inicio].estado = 1;
+						V[pila[d].inicio].estado = 1;
+					}
 				}
 			}
 			if (ValidarPilas(pila, o, d) == 1) {
@@ -194,19 +215,19 @@ int OrdenCartas(Pila pila[], int* contador) {
 
 	}
 	else if (scanf("%c", &opc) == 1) {
-		if (opc == 'w' || opc == 'W') {
+		if (opc == 'w') {
 			return 1;
 		}
-		if (opc == 'd' || opc == 'D') {
-			//Si la pila de reserva no esta vacia
+		if (opc == 'r') {
+			
 			if (tam_Pila(pila, 1) != 0) {
-				//Si la pila 0 esta vacia, hacer pop a pila 1 y luego push a pila 0.
+				
 				if (pilaVacia(pila, 0) == 1) {
 					aux = Desapilar(pila, 1, aux);
 					Apilar(pila, 0, aux);
 					V[pila[0].inicio].estado = 1;
 				}
-				//Si la pila 0 no esta vacia, intercabiar pila 1 con pila 0.
+			
 				else {
 					(*contador)++;
 					IntercambiarPos(pila, pila[0].inicio, pila[1].inicio -
@@ -272,7 +293,7 @@ void Apilar(Pila pila[], int i, Carta x) {
 }
 Carta Desapilar(Pila pila[], int i, Carta x) {
 	if (pila[i].inicio == pila[i].fin)
-		x.numCarta = 0; //Si la pila esta vacia, retorna 0.
+		x.numCarta = 0; 
 	else {
 		x = V[pila[i].inicio];
 		pila[i].inicio = pila[i].inicio - 1;
@@ -392,7 +413,8 @@ void crearCartas(Carta cartas[]) {
 
 	}
 }
-void repartirPilas(Pila pila[]) {
+//repartir cartas
+void repartir(Pila pila[]) {
 	crearTopes(pila);
 	Carta cartas[52];
 	crearCartas(cartas);
@@ -412,5 +434,39 @@ void repartirPilas(Pila pila[]) {
 		}
 		V[pila[i].inicio].estado = 1;
 	}
+
+}
+//tamaño pila
+int tam_Pila(Pila pila[], int i) {
+	return (pila[i].inicio - pila[i].fin);
+}
+//Definir si pila llena o vacía
+int pilaLLena(Pila pila[], int i) {
+	return tam_Pila(pila, i) == 13;
+}
+int pilaVacia(Pila pila[], int i) {
+	return pila[i].fin == pila[i].inicio;
+}
+
+//determinar si ganó
+int ganador(Pila pila[]) {
+	int k = 0;
+	int i = 9;
+	for (int j = 0; j < 4; j++)
+		if (pilaLLena(pila, i + j)) k++;
+
+	return k == 4 ? 1 : 0;
+}
+void menuJuego(Pila pila[]) {
+	repartir(pila);
+	MostrarPilas(pila);
+	int contador = -1;
+	int flag = 0;
+	while (flag != 1) {
+		cout << "Ingrese su jugada: \n" << endl;
+		flag = OrdenCartas(pila, &contador);
+		MostrarPilas(pila);
+	}
+	cout << "¡GANASTE EL JUEGO!\n" << endl;
 
 }
